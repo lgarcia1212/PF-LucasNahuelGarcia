@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administrar Usuarios</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            border: 1px solid #cacaca;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #fff;
+        }
+        button {
+            background-color: #0f5f53;
+            border: none;
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #ff0000;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>Administrar Usuarios</h1>
+    <button onclick="location.href='/admin/products'">Crear Productos</button>
+    <table id="usersTable">
+        <thead>
+            <tr>
+                <th>Nombre</th>
+                <th>Email</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        async function fetchUsers() {
+            try {
+                const response = await fetch('/api/users');
+                if (!response.ok) throw new Error('Error al obtener los usuarios');
+                const users = await response.json();
+                const tbody = document.querySelector('#usersTable tbody');
+                tbody.innerHTML = '';
+
+                users.forEach(user => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${user.first_name} ${user.last_name}</td>
+                        <td>${user.email}</td>
+                        <td>
+                            <button onclick="deleteUser('${user._id}')">Eliminar</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            } catch (error) {
+                alert(error.message);
+            }
+        }
+
+        async function deleteUser(userId) {
+            if (!confirm('¿Confirmas que quieres eliminar este usuario?')) return;
+
+            try {
+                const response = await fetch(`/api/users/admin/${userId}`, {
+                    method: 'DELETE'
+                });
+                if (response.ok) {
+                    fetchUsers();
+                } else {
+                    alert('Error al intentar eliminar el usuario');
+                }
+            } catch (error) {
+                alert('Error de red al intentar eliminar el usuario');
+            }
+        }
+
+        fetchUsers();
+    </script>
+</body>
+
+</html>

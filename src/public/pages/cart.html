@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carrito de Compras</title>
+    <style>
+        table, th, td {
+            border: 1px solid #000;
+            border-collapse: collapse;
+            padding: 12px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Carrito de Compras</h1>
+    <button onclick="window.location.href='/pages/products.html'">Volver a Productos</button>
+
+    <h2>Productos en el Carrito</h2>
+    <table id="cartTable">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Descripción</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Subtotal</th>
+                <th>Acciones</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <h2>Total: <span id="totalAmount">$0</span></h2>
+    <button id="checkoutButton">Comprar</button>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function () {
+            const tableBody = document.querySelector('#cartTable tbody');
+            const totalAmountElement = document.getElementById('totalAmount');
+
+            async function loadCart() {
+                try {
+                    const response = await fetch('/api/cart');
+                    const cart = await response.json();
+                    let totalAmount = 0;
+                    tableBody.innerHTML = cart.map(item => {
+                        const subtotal = item.product.price * item.quantity;
+                        totalAmount += subtotal;
+                        return `
+                            <tr>
+                                <td>${item.product.title}</td>
+                                <td>${item.product.description}</td>
+                                <td>$${item.product.price}</td>
+                                <td>${item.quantity}</td>
+                                <td>$${subtotal}</td>
+                                <td>
+                                    <button onclick="removeFromCart('${item._id}')">Eliminar</button>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+                    totalAmountElement.textContent = `$${totalAmount}`;
+                } catch (error) {
+                    console.error('Error al intentar cargar el carrito:', error);
+                }
+            }
+
+            window.removeFromCart = async function (cartId) {
+                try {
+                    const response = await fetch(`/api/cart/${cartId}`, {
+                        method: 'DELETE'
+                    });
+                    if (response.ok) {
+                        loadCart();
+                    } else {
+                        console.error('Error al intentar eliminar producto del carrito:', await response.text());
+                    }
+                } catch (error) {
+                    console.error('Error al intentar enviar solicitud:', error);
+                }
+            };
+
+            document.getElementById('checkoutButton').addEventListener('click', async function () {
+                try {
+                    const response = await fetch('/api/cart/checkout', { method: 'POST' });
+                    if (response.ok) {
+                        window.location.href = '/pages/ticket.html?ticketId=' + (await response.json()).ticketId;
+                    } else {
+                        console.error('Error al intentar realizar la compra:', await response.text());
+                    }
+                } catch (error) {
+                    console.error('Error al intentar enviar solicitud:', error);
+                }
+            });
+
+            loadCart();
+        });
+    </script>
+</body>
+</html>
