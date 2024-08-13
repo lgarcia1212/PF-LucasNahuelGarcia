@@ -50,7 +50,7 @@
                         </tr>
                     `).join('');
                 } catch (error) {
-                    console.error('Error al cargar productos:', error);
+                    console.error('Error al intentar cargar productos:', error);
                 }
             }
 
@@ -62,12 +62,12 @@
                         body: JSON.stringify({ productId })
                     });
                     if (response.ok) {
-                        alert('Producto añadido al carrito');
+                        alert('Producto añadido al exitosamente');
                     } else {
-                        console.error('Error al añadir producto al carrito:', await response.text());
+                        console.error('Error al intentar añadir producto al carrito:', await response.text());
                     }
                 } catch (error) {
-                    console.error('Error al enviar solicitud:', error);
+                    console.error('Error al intentar enviar solicitud:', error);
                 }
             };
 

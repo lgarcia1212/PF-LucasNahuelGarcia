@@ -82,7 +82,7 @@
                         </tr>
                     `).join('');
                 } catch (error) {
-                    console.error('Error al cargar productos:', error);
+                    console.error('Error al intentar cargar productos:', error);
                 }
             }
 
@@ -109,10 +109,10 @@
                         loadProducts();
                         document.getElementById('productForm').reset();
                     } else {
-                        console.error('Error al guardar producto:', await response.text());
+                        console.error('Error al intentar guardar producto:', await response.text());
                     }
                 } catch (error) {
-                    console.error('Error al enviar solicitud:', error);
+                    console.error('Error al intentar enviar solicitud:', error);
                 }
             });
 
@@ -129,12 +129,12 @@
                     document.getElementById('code').value = product.code;
                     document.getElementById('price').value = product.price;
                 } catch (error) {
-                    console.error('Error al cargar producto:', error);
+                    console.error('Error al intentar cargar producto:', error);
                 }
             };
 
             window.deleteProduct = async function (id) {
-                if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
+                if (confirm('¿Confirma que que desea eliminar este producto?')) {
                     try {
                         const response = await fetch(`/api/products/${id}`, {
                             method: 'DELETE'
@@ -142,10 +142,10 @@
                         if (response.ok) {
                             loadProducts();
                         } else {
-                            console.error('Error al eliminar producto:', await response.text());
+                            console.error('Error al intentar eliminar producto:', await response.text());
                         }
                     } catch (error) {
-                        console.error('Error al enviar solicitud:', error);
+                        console.error('Error al intentar enviar solicitud:', error);
                     }
                 }
             };

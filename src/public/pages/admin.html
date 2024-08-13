@@ -75,7 +75,7 @@
         }
 
         async function deleteUser(userId) {
-            if (!confirm('¿Confirmas que quieres eliminar este usuario?')) return;
+            if (!confirm('¿Confirma que desea eliminar este usuario?')) return;
 
             try {
                 const response = await fetch(`/api/users/admin/${userId}`, {

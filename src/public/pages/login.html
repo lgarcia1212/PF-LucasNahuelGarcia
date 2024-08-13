@@ -68,10 +68,10 @@
                     window.location.href = '/pages/products.html';
                 } else {
                     const result = await response.json();
-                    document.getElementById('error').textContent = result.message || 'Error al iniciar sesión';
+                    document.getElementById('error').textContent = result.message || 'Error al intentar iniciar sesión';
                 }
             } catch (error) {
-                document.getElementById('error').textContent = 'Error al enviar la solicitud';
+                document.getElementById('error').textContent = 'Error al intentar enviar la solicitud';
             }
         });
     </script>

@@ -1,17 +1,17 @@
 import nodemailer from "nodemailer";
-import varenv from "../dotenv.js"; // Importar el objeto completo
+import varenv from "../dotenv.js";
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
-    user: varenv.email_user, // Acceder a las variables del objeto
+    user: varenv.email_user,
     pass: varenv.email_pass,
   },
 });
 
 export const sendEmailChangePassword = async (email, linkChangePassword) => {
   const mailOptions = {
-    from: varenv.email_user, // Usar el valor desde el objeto
+    from: varenv.email_user,
     to: email,
     subject: "Recuperación de contraseña",
     text: `Haz clic aquí para cambiar tu contraseña: ${linkChangePassword}`,
